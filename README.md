@@ -65,8 +65,8 @@ Apache metrics:
 # TYPE apache_scoreboard gauge
 # HELP apache_sent_kilobytes_total Current total kbytes sent (*)
 # TYPE apache_sent_kilobytes_total counter
-# HELP apache_cpu_load CPU Load (*)
-# TYPE apache_cpu_load gauge
+# HELP apache_cpu Apache CPU usage (*)
+# TYPE apache_cpu gauge
 # HELP apache_up Could the apache server be reached
 # TYPE apache_up gauge
 # HELP apache_uptime_seconds_total Current uptime in seconds (*)
