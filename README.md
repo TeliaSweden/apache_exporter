@@ -61,12 +61,16 @@ Apache metrics:
 ```
 # HELP apache_accesses_total Current total apache accesses (*)
 # TYPE apache_accesses_total counter
+# HELP apache_connections Apache connection statuses
+# TYPE apache_connections gauge
+# HELP apache_cpu Apache CPU usage (*)
+# TYPE apache_cpu gauge
+# HELP apache_duration_total Current cumulated response duration time in milliseconds (*)
+# TYPE apache_duration_total counter
 # HELP apache_scoreboard Apache scoreboard statuses
 # TYPE apache_scoreboard gauge
 # HELP apache_sent_kilobytes_total Current total kbytes sent (*)
 # TYPE apache_sent_kilobytes_total counter
-# HELP apache_cpu Apache CPU usage (*)
-# TYPE apache_cpu gauge
 # HELP apache_up Could the apache server be reached
 # TYPE apache_up gauge
 # HELP apache_uptime_seconds_total Current uptime in seconds (*)

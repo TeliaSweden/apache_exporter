@@ -106,7 +106,7 @@ Scoreboard: _W_______K..........................................................
 `
 
 	metricCountApache22       = 18
-	metricCountApache24       = 26
+	metricCountApache24       = 27
 	metricCountApache24Worker = 22
 )
 
