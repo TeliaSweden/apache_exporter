@@ -50,7 +50,7 @@ func NewExporter(uri string) *Exporter {
 		up: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "", "up"),
 			"Could the apache server be reached",
-			nil,
+			[]string{"version", "mpm"},
 			nil),
 		scrapeFailures: prometheus.NewCounter(prometheus.CounterOpts{
 			Namespace: namespace,
@@ -167,12 +167,13 @@ func (e *Exporter) updateScoreboard(scoreboard string) {
 }
 
 func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
+	var apacheVersion, apacheMpm string
+
 	resp, err := e.client.Get(e.URI)
 	if err != nil {
-		ch <- prometheus.MustNewConstMetric(e.up, prometheus.GaugeValue, 0)
+		ch <- prometheus.MustNewConstMetric(e.up, prometheus.GaugeValue, 0, apacheVersion, apacheMpm)
 		return fmt.Errorf("Error scraping apache: %v", err)
 	}
-	ch <- prometheus.MustNewConstMetric(e.up, prometheus.GaugeValue, 1)
 
 	data, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
@@ -180,6 +181,7 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 		if err != nil {
 			data = []byte(err.Error())
 		}
+		ch <- prometheus.MustNewConstMetric(e.up, prometheus.GaugeValue, 1, apacheVersion, apacheMpm)
 		return fmt.Errorf("Status %s (%d): %s", resp.Status, resp.StatusCode, data)
 	}
 
@@ -194,6 +196,10 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 		}
 
 		switch {
+		case key == "ServerVersion":
+			apacheVersion = v
+		case key == "ServerMPM":
+			apacheMpm = v
 		case key == "Total Accesses":
 			val, err := strconv.ParseFloat(v, 64)
 			if err != nil {
@@ -298,8 +304,9 @@ func (e *Exporter) collect(ch chan<- prometheus.Metric) error {
 			e.connections.WithLabelValues("closing").Set(val)
 			connectionInfo = true
 		}
-
 	}
+
+	ch <- prometheus.MustNewConstMetric(e.up, prometheus.GaugeValue, 1, apacheVersion, apacheMpm)
 
 	e.cpu.Collect(ch)
 	e.workers.Collect(ch)
