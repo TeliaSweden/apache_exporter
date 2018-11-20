@@ -93,19 +93,6 @@ CacheRemoveHitCount: 0
 CacheRemoveMissCount: 0
 `
 
-	apache22Status = `Total Accesses: 302311
-Total kBytes: 1677830
-CPULoad: 27.4052
-Uptime: 45683
-ReqPerSec: 6.61758
-BytesPerSec: 37609.1
-BytesPerReq: 5683.21
-BusyWorkers: 2
-IdleWorkers: 8
-Scoreboard: _W_______K......................................................................................................................................................................................................................................................
-`
-
-	metricCountApache22       = 18
 	metricCountApache24       = 27
 	metricCountApache24Worker = 22
 )
@@ -137,10 +124,6 @@ func checkApacheStatus(t *testing.T, status string, metricCount int) {
 	if extraMetrics > 0 {
 		t.Errorf("expected closed channel, got %d extra metrics", extraMetrics)
 	}
-}
-
-func TestApache22Status(t *testing.T) {
-	checkApacheStatus(t, apache22Status, metricCountApache22)
 }
 
 func TestApache24Status(t *testing.T) {
